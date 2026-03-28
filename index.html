@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Dashboard Energia</title>
+    <style>
+        body { font-family: Arial; text-align: center; background: #111; color: #fff; }
+        button { padding: 10px; margin: 10px; cursor: pointer; }
+        .card { margin: 10px; padding: 15px; border: 1px solid #444; display: inline-block; }
+    </style>
+</head>
+<body>
+
+<h1>⚡ Dashboard CLP</h1>
+
+<button onclick="gerar()">Gerar Logs</button>
+<button onclick="analisar()">Analisar</button>
+
+<div id="resultado"></div>
+
+<script>
+const API = "http://127.0.0.1:8000";
+
+function gerar() {
+    fetch(API + "/gerar")
+    .then(r => r.json())
+    .then(data => alert(data.msg));
+}
+
+function analisar() {
+    fetch(API + "/analisar")
+    .then(r => r.json())
+    .then(data => {
+        let html = `
+        <div class="card">Total: ${data.total}</div>
+        <div class="card">Erros: ${data.erros}</div>
+        <div class="card">Alertas: ${data.alertas}</div>
+        <h3>Falhas:</h3>
+        `;
+
+        for (let d in data.falhas) {
+            html += `<p>${d}: ${data.falhas[d]}</p>`;
+        }
+
+        document.getElementById("resultado").innerHTML = html;
+    });
+}
+</script>
+
+</body>
+</html>
